@@ -1,5 +1,7 @@
+// src/screens/HomeScreen.tsx
 import { useCallback, useMemo, useRef, useState } from '@lynx-js/react';
 import HomeTopNav from '../components/HomeTopNav.tsx';
+import VideoOptionsModal from '../components/VideoOptionsModal.tsx';
 
 declare const lynx: {
   createSelectorQuery: () => {
@@ -14,8 +16,8 @@ declare const lynx: {
 };
 
 export default function HomeScreen() {
-  const items = useMemo(() => Array.from({ length: 8 }), []);
-  const [paused, setPaused] = useState(false);
+  const items = useMemo(() => Array.from({ length: 2 }), []);
+  const [showModal, setShowModal] = useState(false); // New state to control modal visibility
   const currIndexRef = useRef(0);
   const snappingRef = useRef(false);
 
@@ -51,6 +53,14 @@ export default function HomeScreen() {
     [items.length],
   );
 
+  const onShowModal = useCallback(() => {
+    setShowModal(true);
+  }, []);
+
+  const onCloseModal = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
   return (
     <view className="FeedWrap">
       <scroll-view
@@ -66,30 +76,26 @@ export default function HomeScreen() {
         {items.map((_, idx) => (
           <view key={idx} className="SnapItem">
             <view className="Card">
-              {/* <text className="CardTitle">
-                Video {idx + 1}{' '}
-                {currIndexRef.current === idx
-                  ? paused ? '(Paused)' : '(Playing)'
-                  : '(Playing)'}
-              </text> */}
-              
+              <text className="CardTitle">
+                Video {idx + 1}{' '}{showModal}
+              </text>
             </view>
           </view>
         ))}
       </scroll-view>
-
       {/* 3 stacked transparent buttons */}
       <view className="TapOverlay">
         <view
-          className="TapButton tap-top"
+          className="TapButton"
           bindtap={() => snapTo(currIndexRef.current - 1)}
         />
-        <view className="TapButton" bindtap={() => setPaused((p) => !p)} />
+        <view className="TapButton tap-mid" bindtap={onShowModal} />
         <view
-          className="TapButton tap-bot"
+          className="TapButton"
           bindtap={() => snapTo(currIndexRef.current + 1)}
         />
       </view>
+      {showModal && <VideoOptionsModal onClose={onCloseModal} />}
     </view>
   );
 }
