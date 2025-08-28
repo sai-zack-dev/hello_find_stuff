@@ -1,38 +1,36 @@
 import { useState, useEffect } from '@lynx-js/react';
-import Icon from "../assets/search-white.png"
+import Icon from '../assets/search-white.png';
 
 interface VideoOptionsModalProps {
   onClose: () => void;
+  findStuff: () => void;
 }
 
-export default function VideoOptionsModal({ onClose }: VideoOptionsModalProps) {
+export default function VideoOptionsModal({
+  onClose,
+  findStuff,
+}: VideoOptionsModalProps) {
   const [speed, setSpeed] = useState('1.0x');
   const [isMounted, setIsMounted] = useState(false);
 
-  // Use useEffect to trigger the transition after the component mounts
   useEffect(() => {
-    // A small delay (e.g., 10ms) is often needed to ensure the
-    // browser has had a chance to render the initial state.
     const timeoutId = setTimeout(() => {
       setIsMounted(true);
     }, 10);
 
     return () => clearTimeout(timeoutId);
-  }, []); // Empty dependency array means this runs only once on mount
+  }, []);
 
   return (
-    <view className="ModalOverlay" bindtap={onClose}>
-      <view
-        className={`ModalContent ${isMounted ? 'Active' : ''}`}
-        bindtap={(e) => e.stopPropagation()}
-      >
+    <view>
+      <view className={`ModalContent ${isMounted ? 'Active' : ''}`}>
         {/* Top Handle */}
         <view className="ModalHandle" />
 
         {/* Top Options */}
-        <view className="OptionRow FindStuffBtn">
-            <text className='NewTag'>New</text>
-          <image src={Icon} className="Icon"  />
+        <view className="OptionRow FindStuffBtn" bindtap={findStuff}>
+          <text className="NewTag">New</text>
+          <image src={Icon} className="Icon" />
           <text className="OptionText">Find Stuff</text>
         </view>
         <view className="OptionRow">
@@ -80,6 +78,7 @@ export default function VideoOptionsModal({ onClose }: VideoOptionsModalProps) {
           <text className="OptionText">Why this video</text>
         </view>
       </view>
+      <view className="ModalOverlay"bindtap={onClose}/>
     </view>
   );
 }

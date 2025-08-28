@@ -22,6 +22,7 @@
   background-color: #333;
   margin-bottom: 10px;
   border-bottom: 3px solid #555;
+  position: relative;
 }
 .CardTitle {
   color: #fff;
@@ -38,6 +39,8 @@
   flex: 1;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 /* full screen overlay */
@@ -67,11 +70,12 @@
   left: 0;
   right: 0;
   height: 50px;
-  background-color: #00000000;
+  background: linear-gradient(to bottom, #666666, #00000000);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
+  z-index: 10;
 }
 
 .NavBarCenter {
@@ -105,6 +109,7 @@
   justify-content: space-around;
   padding-bottom: 30px;
   padding-top: 15px;
+  z-index: 100;
 }
 
 .TabItem {
@@ -164,11 +169,16 @@
   display: flex; /* Use flexbox to align content */
   align-items: flex-end; /* Align content to the bottom */
   justify-content: center; /* Center horizontally if needed */
-  z-index: 1000; /* Ensure it's on top of other content */
+  z-index: 10; /* Ensure it's on top of other content */
 }
 
 /* The actual modal content container */
 .ModalContent {
+  position: fixed; /* Stays in place relative to the viewport */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 11;
   width: 100%; /* Take full width */
   max-width: 500px; /* Optional: limit max width for larger screens */
   background-color: #1c1c1e; /* Dark background color from your image */
@@ -251,10 +261,95 @@
   font-weight: bold;
 }
 .NewTag {
-  position:absolute;
+  position: absolute;
   top: -10px;
   right: -10px;
   background-color: #00ff00;
   border-radius: 5px;
   padding: 2px 10px;
+}
+
+/* In your CSS file (e.g., Home.css) */
+
+.AnimationOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background:
+    radial-gradient(circle at 0%, #00f2ea, transparent),
+    radial-gradient(circle at 100%, #ff004f, transparent);
+  animation: scan 2s linear infinite;
+}
+
+/* Keyframes for the animation */
+@keyframes scan {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.FindResult {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+.ResultOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #00000090;
+  z-index: 9;
+}
+
+.CancelSearch {
+  position: absolute;
+  background-color: #ff004f;
+  border-radius: 10px;
+  z-index: 12;
+  text-align: center;
+  padding: 15px 50px;
+  margin: 20px;
+  font-size: 1em;
+  bottom: 0;
+  color: white;
+}
+
+.ShopItemOverlay{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+}
+.ShopItem{
+  width: 100%;
+  height: 100%;
+}
+.ShopItem.top-left{
+  background-color: cyan;
+}
+.ShopItem.bottom-left{
+  background-color: magenta;
+}
+.ShopItem.top-right{
+  background-color: yellow;
+}
+.ShopItem.bottom-right{
+  background-color: black;
 }
