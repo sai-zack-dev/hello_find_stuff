@@ -28,26 +28,26 @@ export default function BottomTabBar(props: {
 
     const focused = props.currentTab === p.tab
     const labelClass = [
-      'TabLabel',
-      focused ? 'TabLabel--active' : '',
-      p.clickable === false ? 'TabLabel--disabled' : ''
+      'tab-label',
+      focused ? 'tab-label--active' : '',
+      p.clickable === false ? 'tab-label--disabled' : ''
     ].filter(Boolean).join(' ')
 
     const iconSrc = focused && p.solidIcon ? p.solidIcon : p.regularIcon
 
     return (
       <view
-        className='TabItem'
+        className='tab-item'
         {...(p.clickable ? { bindtap: onTap } : {})}
       >
-        <image src={iconSrc} className='TabIcon' />
+        <image src={iconSrc} className='tab-icon' />
         <text className={labelClass}>{p.label}</text>
       </view>
     )
   }
 
   return (
-    <view className='TabBar'>
+    <view className='tab-bar'>
       <Item
         tab='home'
         label='Home'
@@ -65,9 +65,9 @@ export default function BottomTabBar(props: {
         clickable={!!props.shopEnabled}
       />
 
-      <view className='PlusWrapper'>
-        <view className='PlusButton'>
-          <text className='PlusGlyph'>＋</text>
+      <view className='plus-wrapper'>
+        <view className='plus-btn'>
+          <text className='plus-glyph'>＋</text>
         </view>
       </view>
 

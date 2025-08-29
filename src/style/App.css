@@ -1,0 +1,68 @@
+/* ===== Global / App-level ===== */
+.root {
+  height: 100%;
+  background-color: #111;
+  padding-top: 55px;
+}
+
+/* ===== Bottom Tab Bar ===== */
+.tab-bar {
+  position: fixed;
+  height: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: 30px;
+  padding-top: 15px;
+  z-index: 100;
+}
+
+.tab-item {
+  width: 65px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 2px;
+  opacity: 0.6;
+}
+
+.tab-icon--active {
+  opacity: 1;
+}
+
+.tab-label {
+  color: #bbb;
+  font-size: 11px;
+}
+
+.tab-label--active {
+  color: #fff;
+}
+
+.plus-wrapper {
+  margin-top: -10px;
+}
+
+.plus-btn {
+  width: 55px;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+}
+
+.plus-glyph {
+  color: #000;
+  font-weight: 700;
+  font-size: 25px;
+}

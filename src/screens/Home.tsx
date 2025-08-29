@@ -5,6 +5,7 @@ import v1 from '../assets/Video_1.png';
 import v2 from '../assets/Video_2.png';
 import r1 from '../assets/result_1.png';
 import r2 from '../assets/result_2.png';
+import '../style/Home.css';
 
 declare const lynx: {
   createSelectorQuery: () => {
@@ -68,10 +69,10 @@ export default function HomeScreen(props: {
   }, [props]);
 
   return (
-    <view className="FeedWrap">
+    <view>
       <scroll-view
         id="feed"
-        className="Feed"
+        className="feed"
         scroll-orientation="vertical"
         enable-scroll={true}
         bounces={false}
@@ -80,38 +81,38 @@ export default function HomeScreen(props: {
       >
         <HomeTopNav />
         {items.map((_, idx) => (
-          <view key={idx} className="SnapItem">
-            <image className="Card" src={idx === 1 ? v2 : v1} />
+          <view key={idx} className="snap-item">
+            <image className="card" src={idx === 1 ? v2 : v1} />
           </view>
         ))}
       </scroll-view>
 
       {/* overlays go OUTSIDE the SnapItems */}
       {scanState === 'animating' && (
-        <view className="AnimationOverlay" />
+        <view className="animation-overlay" />
       )}
 
       {scanState === 'result' && (
-        <view className="ResultWrap">
-          <text className="CancelSearch" bindtap={() => setScanState('idle')}>
+        <view className="result-wrap">
+          <text className="cancel-search" bindtap={() => setScanState('idle')}>
             Cancel Search
           </text>
 
-          <view className="ShopItemOverlay">
-            <view className="ShopItem top-left"     bindtap={() => selectItem(currIndexRef.current, 1)} />
-            <view className="ShopItem top-right"    bindtap={() => selectItem(currIndexRef.current, 2)} />
-            <view className="ShopItem bottom-left"  bindtap={() => selectItem(currIndexRef.current, 3)} />
-            <view className="ShopItem bottom-right" bindtap={() => selectItem(currIndexRef.current, 4)} />
+          <view className="result-item-overlay">
+            <view className="result-item top-left"     bindtap={() => selectItem(currIndexRef.current, 1)} />
+            <view className="result-item top-right"    bindtap={() => selectItem(currIndexRef.current, 2)} />
+            <view className="result-item bottom-left"  bindtap={() => selectItem(currIndexRef.current, 3)} />
+            <view className="result-item bottom-right" bindtap={() => selectItem(currIndexRef.current, 4)} />
           </view>
 
-          <image className="FindResult" src={currIndexRef.current === 1 ? r2 : r1} />
+          <image className="find-result" src={currIndexRef.current === 1 ? r2 : r1} />
         </view>
       )}
 
-      <view className="TapOverlay">
-        <view className="TapButton" bindtap={() => snapTo(currIndexRef.current - 1)} />
-        <view className="TapButton" bindtap={onShowModal} />
-        <view className="TapButton" bindtap={() => snapTo(currIndexRef.current + 1)} />
+      <view className="tap-overlay">
+        <view className="tap-btn" bindtap={() => snapTo(currIndexRef.current - 1)} />
+        <view className="tap-btn" bindtap={onShowModal} />
+        <view className="tap-btn" bindtap={() => snapTo(currIndexRef.current + 1)} />
       </view>
 
       {showModal && (
