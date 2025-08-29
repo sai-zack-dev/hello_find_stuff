@@ -13,6 +13,7 @@ type TabKey = 'home' | 'shop' | 'inbox' | 'profile'
 export default function BottomTabBar(props: {
   currentTab: TabKey
   onChangeTab: (tab: TabKey) => void
+  shopEnabled?: boolean            // ⬅️ new prop
 }) {
   const Item = (p: {
     tab: TabKey
@@ -26,10 +27,13 @@ export default function BottomTabBar(props: {
     }, [p.tab, p.clickable])
 
     const focused = props.currentTab === p.tab
-    const labelClass = focused ? 'TabLabel TabLabel--active' : 'TabLabel'
+    const labelClass = [
+      'TabLabel',
+      focused ? 'TabLabel--active' : '',
+      p.clickable === false ? 'TabLabel--disabled' : ''
+    ].filter(Boolean).join(' ')
 
-    const iconSrc =
-      focused && p.solidIcon ? p.solidIcon : p.regularIcon
+    const iconSrc = focused && p.solidIcon ? p.solidIcon : p.regularIcon
 
     return (
       <view
@@ -51,11 +55,14 @@ export default function BottomTabBar(props: {
         solidIcon={homeSolid}
         clickable
       />
+
+      {/* Shop is clickable only after selection */}
       <Item
         tab='shop'
         label='Shop'
         regularIcon={shopRegular}
         solidIcon={shopSolid}
+        clickable={!!props.shopEnabled}
       />
 
       <view className='PlusWrapper'>

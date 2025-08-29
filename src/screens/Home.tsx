@@ -18,63 +18,54 @@ declare const lynx: {
   };
 };
 
-export default function HomeScreen() {
+export default function HomeScreen(props: {
+  onSelectResult: (result: number, item: number) => void;
+}) {
   const items = useMemo(() => Array.from({ length: 2 }), []);
   const [showModal, setShowModal] = useState(false);
   const currIndexRef = useRef(0);
   const snappingRef = useRef(false);
-  const [scanState, setScanState] = useState<'idle' | 'animating' | 'result'>(
-    'idle',
-  ); // New state for scanning
+  const [scanState, setScanState] = useState<'idle' | 'animating' | 'result'>('idle');
+  const [visibleIdx, setVisibleIdx] = useState(0);
 
-  const snapTo = useCallback(
-    (idx: number) => {
-      const max = items.length - 1;
-      const target = Math.max(0, Math.min(max, idx));
-      if (target === currIndexRef.current) return;
-      snappingRef.current = true;
-      currIndexRef.current = target;
+  const snapTo = useCallback((idx: number) => {
+    const max = items.length - 1;
+    const target = Math.max(0, Math.min(max, idx));
+    if (target === currIndexRef.current) return;
+    snappingRef.current = true;
+    currIndexRef.current = target;
+    setVisibleIdx(target);
 
-      lynx
-        .createSelectorQuery()
-        .select('#feed')
-        .invoke({ method: 'scrollTo', params: { index: target, smooth: true } })
-        .exec();
+    lynx.createSelectorQuery()
+      .select('#feed')
+      .invoke({ method: 'scrollTo', params: { index: target, smooth: true } })
+      .exec();
 
-      setTimeout(() => {
-        snappingRef.current = false;
-      }, 80);
-    },
-    [items.length],
-  );
+    setTimeout(() => { snappingRef.current = false; }, 80);
+  }, [items.length]);
 
-  const onScrollEnd = useCallback(
-    (e: any) => {
-      const { scrollTop = 0, scrollHeight = 0 } = e?.detail || {};
-      if (!scrollHeight || !items.length) return;
-      const pageH = scrollHeight / items.length;
-      const nearest = Math.round(scrollTop / pageH);
-      currIndexRef.current = Math.max(0, Math.min(items.length - 1, nearest));
-    },
-    [items.length],
-  );
+  const onScrollEnd = useCallback((e: any) => {
+    const { scrollTop = 0, scrollHeight = 0 } = e?.detail || {};
+    if (!scrollHeight || !items.length) return;
+    const pageH = scrollHeight / items.length;
+    const nearest = Math.round(scrollTop / pageH);
+    const clamped = Math.max(0, Math.min(items.length - 1, nearest));
+    currIndexRef.current = clamped;
+    setVisibleIdx(clamped);
+  }, [items.length]);
 
-  const onShowModal = useCallback(() => {
-    setShowModal(true);
-  }, []);
-
-  const onCloseModal = useCallback(() => {
-    setShowModal(false);
-  }, []);
+  const onShowModal = useCallback(() => setShowModal(true), []);
+  const onCloseModal = useCallback(() => setShowModal(false), []);
 
   const handleFindStuff = () => {
     setShowModal(false);
     setScanState('animating');
-
-    setTimeout(() => {
-      setScanState('result');
-    }, 1000);
+    setTimeout(() => setScanState('result'), 1000);
   };
+
+  const selectItem = useCallback((videoIdx: number, itemIdx: number) => {
+    props.onSelectResult(videoIdx + 1, itemIdx);
+  }, [props]);
 
   return (
     <view className="FeedWrap">
@@ -90,41 +81,39 @@ export default function HomeScreen() {
         <HomeTopNav />
         {items.map((_, idx) => (
           <view key={idx} className="SnapItem">
-            {scanState === 'animating' && <view className="AnimationOverlay" />}
-            {scanState === 'result' && (
-              <>
-                <text
-                  className="CancelSearch"
-                  bindtap={() => setScanState('idle')}
-                >
-                  Cancel Search
-                </text>
-                <view className='ShopItemOverlay'>
-                  {/* these are shop items, click one of these redirect to shop with like this {result: 1, item: 1} there are 2 video/image so if v2 {result: 2, item: 1}. The index of top-left gonna be 1, index of top-right is 2, bottom-left index 3 and bottom-right 4. There are 4 items each for 2 video/image so total 8 items */}
-                  <view className='ShopItem top-left' bindtap={()=> {}}/>
-                  <view className='ShopItem top-right' bindtap={()=> {}}/>
-                  <view className='ShopItem bottom-left' bindtap={()=> {}}/>
-                  <view className='ShopItem bottom-right' bindtap={()=> {}}/>
-                </view>
-                <image className="Card FindResult" src={idx === 1 ? r2 : r1} />
-                <view className="ResultOverlay" />
-              </>
-            )}
-            <image className="Card" src={idx == 1 ? v2 : v1} />
+            <image className="Card" src={idx === 1 ? v2 : v1} />
           </view>
         ))}
       </scroll-view>
+
+      {/* overlays go OUTSIDE the SnapItems */}
+      {scanState === 'animating' && (
+        <view className="AnimationOverlay" />
+      )}
+
+      {scanState === 'result' && (
+        <view className="ResultWrap">
+          <text className="CancelSearch" bindtap={() => setScanState('idle')}>
+            Cancel Search
+          </text>
+
+          <view className="ShopItemOverlay">
+            <view className="ShopItem top-left"     bindtap={() => selectItem(currIndexRef.current, 1)} />
+            <view className="ShopItem top-right"    bindtap={() => selectItem(currIndexRef.current, 2)} />
+            <view className="ShopItem bottom-left"  bindtap={() => selectItem(currIndexRef.current, 3)} />
+            <view className="ShopItem bottom-right" bindtap={() => selectItem(currIndexRef.current, 4)} />
+          </view>
+
+          <image className="FindResult" src={currIndexRef.current === 1 ? r2 : r1} />
+        </view>
+      )}
+
       <view className="TapOverlay">
-        <view
-          className="TapButton"
-          bindtap={() => snapTo(currIndexRef.current - 1)}
-        />
+        <view className="TapButton" bindtap={() => snapTo(currIndexRef.current - 1)} />
         <view className="TapButton" bindtap={onShowModal} />
-        <view
-          className="TapButton"
-          bindtap={() => snapTo(currIndexRef.current + 1)}
-        />
+        <view className="TapButton" bindtap={() => snapTo(currIndexRef.current + 1)} />
       </view>
+
       {showModal && (
         <VideoOptionsModal onClose={onCloseModal} findStuff={handleFindStuff} />
       )}
