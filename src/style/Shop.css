@@ -18,6 +18,28 @@
   font-size: 16px;
 }
 
+.shop-screen .findstuff-btn{
+  width: 100%;
+}
+
+/* List container (Lynx waterfall) */
+.shopping-results-list {
+  width: 100%;
+  height: 59vh;           /* same viewport height you used */
+  /* no gap props here; spacing comes from card margins */
+}
+
+/* Each card */
+.shopping-item {
+  background-color: #333;
+  color: #eee;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 0 6px 10px;
+}
+
+
+/* Result item wrap (for tabs) */
 .result-item-wrap {
   display: flex;
   flex-direction: row;
@@ -26,6 +48,7 @@
   margin-bottom: 20px;
 }
 
+/* Result item tab */
 .result-item-tab {
   width: 100px;
   height: 100px;
@@ -37,35 +60,21 @@
   border-color: #ffffff;
 }
 
-.shopping-results-wrap{
-  width: 100%;
-  height: 59vh;
-}
-
-.shopping-results {
-  width: 100%;
-  padding: 5px;
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 1fr 1fr;
-  padding-bottom: 10px;
-}
-
+/* Shopping title */
 .shopping-title {
   color: #fff;
   font-size: 16px;
   margin-bottom: 10px;
 }
-
-.shopping-item {
-  background-color: #222;
-  color: #eee;
-  padding: 10px;
-  border-radius: 6px;
+.shopping-image-wrap{
   width: 100%;
-  height: 250px;
+  height: 200px;
 }
-
-.shop-screen .findstuff-btn {
+.shopping-item-image{
   width: 100%;
+  height: 100%;
+}
+.item-label{
+  color: white;
+  padding: 10px 0 0 0;
 }
